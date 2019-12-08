@@ -1,6 +1,6 @@
 <template>
     <div id="Editor">
-        <b-form-textarea id="textarea-rows" placeholder="First enter your username (sender's username)" rows="12" v-model="text" :disabled="!senderUsername">{{ text }}</b-form-textarea>
+        <b-form-textarea id="textarea-rows" placeholder="First enter your username (sender's username)" rows="12" v-model="text" :disabled="!senderUsername" >{{ text }}</b-form-textarea>
     </div>
 </template>
 
@@ -17,23 +17,33 @@ export default {
     data(){
         return {
             text : null,
-            socket : io('localhost:3001')
+            socket : io('192.168.43.94:3001')
         }
     },
     watch:{
         text(){
-            this.socket.emit('updatedText',{senderUsername: this.senderUsername,recieverUsername : this.recieverUsername,text: this.text});
+            try{
+                this.socket.emit('updatedText',{senderUsername: this.senderUsername,recieverUsername : this.recieverUsername,text: this.text});
+            }
+            catch (e){
+                console.log(e);
+            }
             this.setTextLength(this.text.length)
         }
     },
     mounted(){
-        this.socket.on('recievedText',(data)=>{
-            var a=data.recieverUsername
-            var b=this.senderUsername
-            if(a===b){
-            this.text = data.text;
-            }
-        })
+        try{
+            this.socket.on('recievedText',(data)=>{
+                var a=data.recieverUsername
+                var b=this.senderUsername
+                if(a===b){
+                this.text = data.text;
+                }
+            })
+        }
+        catch(e){
+            console.log(e);
+        }
     }
 }
 </script>
