@@ -17,7 +17,7 @@ export default {
     data(){
         return {
             text : null,
-            socket : io('192.168.43.94:3001')
+            socket : io('localhost:3001')
         }
     },
     watch:{
